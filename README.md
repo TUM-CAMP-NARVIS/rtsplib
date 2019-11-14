@@ -1,13 +1,13 @@
 # rtsplib
 
-rtsplib combines NvPipe with a rtsp connection.
+rtsplib provides a rtsp client/server for h264 transimssion
 
 ## Requirements
 
 Building rtsplib requires:
 
-- Cuda (with Display Driver >= 4.18)
 - Conan (refer to https://docs.conan.io/en/latest/installation.html)
+- spdlog
 
 ## Creating Conan package
 
@@ -103,3 +103,4 @@ RTSP Client:
 https://github.com/sliver-chen/Simple-Rtsp-Client (no Licence), adapted to project by Kevin Yu
 
 &copy; Research group MITI
+refactored by Ulrich Eck CAMP/TUM
