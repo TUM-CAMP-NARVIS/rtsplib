@@ -9,7 +9,7 @@ class rtsplib_Conan(ConanFile):
     default_options = {
         "shared": True, 
         }
-    exports_sources = "include*", "src*", "3rdParty*", "CMakeLists.txt"
+    exports_sources = "include*", "src*", "tests*", "CMakeLists.txt"
 
     description = "rtsp streaming library"
 
