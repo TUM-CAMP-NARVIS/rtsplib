@@ -52,6 +52,11 @@ using namespace rtsplib;
 ClientPipeRTSP::ClientPipeRTSP(std::string _rtspAddress)
 	: m_rtspAddress(_rtspAddress) {}
 
+ClientPipeRTSP::~ClientPipeRTSP() {
+    if (m_frameBuffer != nullptr) {
+        free(m_frameBuffer);
+    }
+}
 
 bool ClientPipeRTSP::startClient() {
 	m_player = std::make_shared<RK::RtspPlayer>([&](uint8_t *buffer, ssize_t bufferLength)
@@ -78,7 +83,7 @@ bool ClientPipeRTSP::startClient() {
 				if (!m_pkgCorrupted && frameCounter == ((m_currentFrameCounter + 1) % 256) && m_prevPkgSize < MAX_RTP_PAYLOAD_SIZE + RTP_HEADER_SIZE)
 				{
                     if (m_recv_cb != nullptr) {
-                        m_recv_cb(&m_frameBuffer[m_currentOffset], m_currentOffset, m_currentTimestamp);
+                        m_recv_cb(m_frameBuffer, m_currentOffset, m_currentTimestamp);
                     } else {
                         spdlog::warn("Received frame, but no callback was registered.");
                     }
@@ -124,7 +129,7 @@ bool ClientPipeRTSP::startClient() {
 	    m_bytesPerPixel = bytesPerPixel;
 
         m_dataSize = m_width * m_height * m_bytesPerPixel;
-        m_frameBuffer.resize(m_dataSize, 0);
+        m_frameBuffer = (uint8_t *)malloc(m_dataSize);
 
         if (m_start_stream_cb != nullptr) {
             m_start_stream_cb(width, height, bytesPerPixel);

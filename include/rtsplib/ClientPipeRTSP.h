@@ -64,7 +64,7 @@ namespace rtsplib
 	{
 	public:
 		ClientPipeRTSP(std::string rtspAddress);
-		~ClientPipeRTSP() = default;
+		~ClientPipeRTSP();
 
 		bool startClient();
         void stopClient();
@@ -109,7 +109,7 @@ namespace rtsplib
         int m_width{0};
         int m_bytesPerPixel{0};
         int m_dataSize;
-        std::vector<uint8_t> m_frameBuffer;
+        uint8_t* m_frameBuffer{nullptr};
 
         bool m_isRunning = false;
 

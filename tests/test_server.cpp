@@ -33,6 +33,7 @@ void signal_handler(int signal)
 }
 
 int main(int argc, const char *argv[]) {
+    spdlog::set_level(spdlog::level::trace);
 
     // reads example stream from nvpipe nvExampleFile (stream.bin)
     const uint32_t width = 3840;

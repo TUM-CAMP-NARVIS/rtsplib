@@ -8,7 +8,7 @@
 #include "spdlog/spdlog.h"
 
 int main(int argc, const char *argv[]) {
-
+    spdlog::set_level(spdlog::level::trace);
 
     if (argc < 2) {
         spdlog::error("Usage: test_client rtsp://<ip>:<port>/<stream>");
