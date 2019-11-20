@@ -15,6 +15,7 @@ class rtsplib_Conan(ConanFile):
 
     requires = (
         "spdlog/1.4.2",
+        "gtest/1.10.0",
     )
 
     def build(self):

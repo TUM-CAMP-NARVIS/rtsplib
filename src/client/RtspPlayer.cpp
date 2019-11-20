@@ -39,7 +39,6 @@ do {\
 namespace RK {
 
     std::mutex RtspPlayer::_portMutex;
-    std::mutex RtspPlayer::_connectMutex;
 
     RtspPlayer::RtspPlayer(RecvBufferFn recv_cb, std::string name)
     :   recv_cb(recv_cb)
@@ -269,21 +268,22 @@ namespace RK {
 
                 {
                     std::lock_guard<std::mutex> guard(_portMutex);
+                    log(TAG, "client finding free ports");
                     _video_rtp_port = RTP_PORT;
                     while (!PortIsOpen(_video_rtp_port))
-                        _video_rtp_port++;
+                        _video_rtp_port += _randomNumbersDist(_randomDevice);  // use random numbers to reduce chance of clashes
 
                     _video_rtcp_port = RTCP_PORT;
                     while (!PortIsOpen(_video_rtcp_port))
-                        _video_rtcp_port++;
+                        _video_rtcp_port += _randomNumbersDist(_randomDevice);  // use random numbers to reduce chance of clashes
                     RtspSetup(_rtspurl, videoTrackID, RTSPVIDEO_SETUP, _SdpParser->medias[i].info.proto, _video_rtp_port, _video_rtcp_port);
+                    log(TAG, "client finished finding free ports");
                 }
             }
         }
     }
     
     bool RtspPlayer::HandleVideoSetup(const char *buf, ssize_t bufsize) {
-        std::lock_guard<std::mutex> guard(_connectMutex);
         int remote_port = 0;
         int remote_rtcp_port = 0;
 

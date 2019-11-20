@@ -174,4 +174,5 @@ SET_TARGET_PROPERTIES(rtsplib PROPERTIES COMPILE_FLAGS "-fPIC")
 install(TARGETS rtsplib DESTINATION ${CMAKE_INSTALL_LIBDIR})
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
+add_subdirectory(examples)
 add_subdirectory(tests)
