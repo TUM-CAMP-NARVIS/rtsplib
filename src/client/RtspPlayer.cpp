@@ -268,7 +268,6 @@ namespace RK {
 
                 {
                     std::lock_guard<std::mutex> guard(_portMutex);
-                    log(TAG, "client finding free ports");
                     _video_rtp_port = RTP_PORT;
                     while (!PortIsOpen(_video_rtp_port))
                         _video_rtp_port++;
@@ -277,7 +276,6 @@ namespace RK {
                     while (!PortIsOpen(_video_rtcp_port))
                         _video_rtcp_port++;
                     RtspSetup(_rtspurl, videoTrackID, RTSPVIDEO_SETUP, _SdpParser->medias[i].info.proto, _video_rtp_port, _video_rtcp_port);
-                    log(TAG, "client finished finding free ports");
                 }
             }
         }
