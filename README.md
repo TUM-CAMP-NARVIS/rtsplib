@@ -8,6 +8,7 @@ Building rtsplib requires:
 
 - Conan (refer to https://docs.conan.io/en/latest/installation.html)
 - spdlog
+- gtest
 
 ## Creating Conan package
 
