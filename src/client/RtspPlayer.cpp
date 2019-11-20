@@ -39,6 +39,7 @@ do {\
 namespace RK {
 
     std::mutex RtspPlayer::_portMutex;
+    std::mutex RtspPlayer::_connectMutex;
 
     RtspPlayer::RtspPlayer(RecvBufferFn recv_cb, std::string name)
     :   recv_cb(recv_cb)
@@ -282,6 +283,7 @@ namespace RK {
     }
     
     bool RtspPlayer::HandleVideoSetup(const char *buf, ssize_t bufsize) {
+        std::lock_guard<std::mutex> guard(_connectMutex);
         int remote_port = 0;
         int remote_rtcp_port = 0;
 

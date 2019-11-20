@@ -49,6 +49,7 @@
 using namespace std;
 using namespace rtsplib;
 
+
 ClientPipeRTSP::ClientPipeRTSP(std::string _rtspAddress)
 	: m_rtspAddress(_rtspAddress) {}
 

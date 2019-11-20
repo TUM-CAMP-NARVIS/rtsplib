@@ -30,6 +30,7 @@ typedef SSIZE_T ssize_t;
 
 #include <iostream>
 #include <thread>
+#include <mutex>
 #include <vector>
 #include <atomic>
 #include <string.h>
@@ -144,7 +145,7 @@ namespace RK {
         fd_set _readfd;
         fd_set _writefd;
         fd_set _errorfd;
-        
+
         std::string _rtspurl;
         int _video_rtp_port;
         int _video_rtcp_port;
@@ -164,6 +165,7 @@ namespace RK {
         std::string TAG;
 
         static std::mutex _portMutex;
+        static std::mutex _connectMutex;
     };
     
 } //namespace RK
