@@ -37,7 +37,6 @@ typedef SSIZE_T ssize_t;
 #include <functional>
 #include <sys/types.h>
 #include <mutex>
-#include <random>
 
 extern "C" {
 #include "rtsplib/client/sdp.h"
@@ -166,8 +165,6 @@ namespace RK {
         std::string TAG;
 
         static std::mutex _portMutex;
-        std::random_device _randomDevice;
-        std::uniform_int_distribution<int> _randomNumbersDist{0, 9};
     };
     
 } //namespace RK
