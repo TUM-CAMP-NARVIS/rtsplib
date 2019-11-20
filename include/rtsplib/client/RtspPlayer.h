@@ -165,6 +165,7 @@ namespace RK {
         std::string TAG;
 
         static std::mutex _portMutex;
+        static std::vector<int> _known_used_Ports;
     };
     
 } //namespace RK
