@@ -79,7 +79,7 @@ TEST(RtsplibTestSuite, SimpleConnectMultipleClientsTest){
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
 
-    int num_clients{12};
+    int num_clients{6};
     std::vector<std::shared_ptr<rtsplib::ClientPipeRTSP>> clients;
 
     std::atomic_int num_init_callbacks{0};
@@ -132,7 +132,12 @@ TEST(RtsplibTestSuite, SimpleConnectMultipleClientsTest){
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
     EXPECT_EQ(num_init_callbacks, num_clients);
-    EXPECT_EQ(num_frame_callbacks, num_clients*frame_counter);
+    
+    // The receiver only fires the callback after receiving the header of the next frame
+    // The last frame inside the test is never followed up by a next one; the algorithm will not be able to detect it
+    // For this reason, the correct number of frames are "frame_counter - 1"
+    EXPECT_EQ(num_frame_callbacks, num_clients*(frame_counter - 1));    
+
 
     for (auto& client : clients) {
         spdlog::info("Stopping client");
