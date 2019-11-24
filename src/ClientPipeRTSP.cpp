@@ -91,7 +91,7 @@ bool ClientPipeRTSP::startClient() {
 				}
 				else
 				{
-					spdlog::warn("frame was skipped");
+					spdlog::warn("frame was skipped (corrupted: {0}, missed frame: {1}, max_payload_size: {2})", m_pkgCorrupted, !(frameCounter == ((m_currentFrameCounter + 1) % 256)), !(m_prevPkgSize < MAX_RTP_PAYLOAD_SIZE + RTP_HEADER_SIZE));
 				}
 
 				// Reset variables for new frame
