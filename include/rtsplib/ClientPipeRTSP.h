@@ -116,7 +116,6 @@ namespace rtsplib
         uint32_t m_currentTimestamp = 0;
 		uint8_t m_currentFrameCounter = 0;
 		bool m_pkgCorrupted = false;
-		int m_prevPkgSize = 0;
 		int m_currentOffset = 0;
 
 		RK::RtspPlayer::Ptr m_player;
