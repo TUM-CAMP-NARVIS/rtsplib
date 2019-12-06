@@ -62,15 +62,15 @@ namespace rtsplib
 
       bool startServer(int width, int height, int bytesPerPixel);
 
-      bool sendFrame(u_char* data, size_t size, uint32_t ts = 0);
+      bool sendFrame(unsigned char* data, int size, uint32_t ts = 0);
 
       void stopServer();
 
     private:
       bool init_Loop(int _width, int _height, int _bytesPerPixel);
 
-      ssize_t startCodePosition(const u_char* buffer, int maxSize, size_t offset);
-      void get_NalPackage(u_char* buffer, int maxSize, int *head, int *tail, int *length);
+      int startCodePosition(const unsigned char* buffer, int maxSize, int offset);
+      void get_NalPackage(unsigned char* buffer, int maxSize, int *head, int *tail, int *length);
 
       std::string m_ipAddress;
 

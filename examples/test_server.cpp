@@ -71,7 +71,7 @@ int main(int argc, const char *argv[]) {
             in.read((char*) &size, sizeof(uint64_t));
             in.read((char*) compressed.data(), size);
 
-            server->sendFrame(compressed.data(), size, 0);
+            server->sendFrame(compressed.data(), static_cast<int>(size), 0);
         }
 
         in.close();

@@ -115,7 +115,7 @@ bool ClientPipeRTSP::startClient() {
 			m_currentFrameCounter = frameCounter;
 			ssize_t rdLength;
 			cvtBuffer(buffer, bufferLength, &m_frameBuffer[m_currentOffset], &rdLength);
-			m_currentOffset += rdLength;
+			m_currentOffset += static_cast<int>(rdLength);
 
 		}, "Stream");
 

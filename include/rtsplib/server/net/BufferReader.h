@@ -21,10 +21,10 @@ public:
     ~BufferReader();
 
     uint32_t readableBytes() const
-    { return _writerIndex - _readerIndex; }
+    { return static_cast<uint32_t>(_writerIndex - _readerIndex); }
 
     uint32_t writableBytes() const
-    {  return _buffer->size() - _writerIndex; }
+    {  return static_cast<uint32_t>(_buffer->size() - _writerIndex); }
 
     char* peek() 
     { return begin() + _readerIndex; }
@@ -75,7 +75,9 @@ public:
     uint32_t readUntilCrlf(std::string& data);
 
     uint32_t bufferSize() const 
-    { return _buffer->size(); }
+    { 
+		return static_cast<uint32_t>(_buffer->size()); 
+	}
 
 private:
     char* begin()

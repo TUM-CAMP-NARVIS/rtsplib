@@ -29,7 +29,9 @@ public:
     { return ((int)_buffer->size()>=_maxQueueLength?true:false); }
 
     uint32_t size() const 
-    { return _buffer->size(); }
+    {
+		return static_cast<uint32_t>(_buffer->size());
+	}
 	
 private:
     typedef struct 

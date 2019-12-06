@@ -95,7 +95,7 @@ bool ServerPipeRTSP::init_Loop(int _width, int _height, int _bytesPerPixel)
     return true;
 }
 
-bool ServerPipeRTSP::sendFrame(unsigned char* data, size_t size, uint32_t timestamp)
+bool ServerPipeRTSP::sendFrame(unsigned char* data, int size, uint32_t timestamp)
 {
     if (!m_isRunning) {
         spdlog::warn("Server is not running!");
@@ -133,7 +133,7 @@ bool ServerPipeRTSP::sendFrame(unsigned char* data, size_t size, uint32_t timest
     return true;
 }
 
-ssize_t ServerPipeRTSP::startCodePosition(const u_char* buffer, int maxSize, size_t offset)
+int ServerPipeRTSP::startCodePosition(const unsigned char* buffer, int maxSize, int offset)
 {
 	assert(offset < maxSize);
 
@@ -162,7 +162,7 @@ ssize_t ServerPipeRTSP::startCodePosition(const u_char* buffer, int maxSize, siz
     return -1;
 }
 
-void ServerPipeRTSP::get_NalPackage(u_char* buffer, int maxSize, int *head, int *tail, int *length)
+void ServerPipeRTSP::get_NalPackage(unsigned char* buffer, int maxSize, int *head, int *tail, int *length)
 {
     int start = startCodePosition(buffer, maxSize, *tail);
     int end = startCodePosition(buffer, maxSize, start + 1);

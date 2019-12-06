@@ -56,6 +56,9 @@
 # 																					#
 *************************************************************************************/
 
+
+#pragma warning( disable : 4251 ) // needs to have dll-interface to be used by clients of class
+
 // If defined, time will be displayed
 //#define DISPPIPETIME
 #if defined(_MSC_VER)

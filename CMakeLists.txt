@@ -44,8 +44,6 @@ project(rtsplib VERSION 1.0.0 LANGUAGES CXX C)
 #                                                                                   #
 # ***********************************************************************************
 
-# XXX these flags only work on linux !!!
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -fPIC")
 
 option(BUILD_SHARED_LIBS "Build shared library" ON)
 
@@ -56,6 +54,9 @@ include(GNUInstallDirs)
 #################################################################################################
 # RTSP Server and Client
 #################################################################################################
+
+find_package(Threads REQUIRED)
+
 
 set(RTSP_COMMON_HDRS
         ${PROJECT_SOURCE_DIR}/include/rtsplib/rtsplib_common.h
@@ -152,9 +153,11 @@ add_library(rtsplib ${RTSP_CLIENT_SRCS} ${RTSP_SERVER_SRCS} ${RTSP_COMMON_HDRS} 
 
 set_property(TARGET rtsplib PROPERTY CXX_STANDARD 11)
 set_target_properties(rtsplib PROPERTIES LINKER_LANGUAGE CXX)
+set_property(TARGET rtsplib PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 target_link_libraries(rtsplib PRIVATE
         CONAN_PKG::spdlog
+        Threads::Threads
         )
 
 target_include_directories(rtsplib PUBLIC
@@ -167,9 +170,6 @@ target_include_directories(rtsplib PUBLIC
 if(BUILD_SHARED_LIBS)
     set_target_properties(rtsplib PROPERTIES COMPILE_DEFINITIONS "RTSPLIB_DLL")
 endif()
-
-# only valid on linux
-SET_TARGET_PROPERTIES(rtsplib PROPERTIES COMPILE_FLAGS "-fPIC")
 
 install(TARGETS rtsplib DESTINATION ${CMAKE_INSTALL_LIBDIR})
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
