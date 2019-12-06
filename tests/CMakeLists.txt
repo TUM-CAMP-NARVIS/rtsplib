@@ -9,9 +9,15 @@ set_target_properties(rtsplib_test PROPERTIES CXX_STANDARD 11)
 
 target_link_libraries(rtsplib_test PUBLIC
         rtsplib
-        CONAN_PKG::gtest
         CONAN_PKG::spdlog
         )
+
+# conan weirdness ...
+if (TARGET CONAN_PKG::GTest)
+  target_link_libraries(rtsplib_test PUBLIC CONAN_PKG::GTest)
+else()
+  target_link_libraries(rtsplib_test PUBLIC CONAN_PKG::gtest)
+endif()
 
 target_include_directories(rtsplib_test
         PRIVATE

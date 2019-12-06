@@ -140,6 +140,7 @@ bool ClientPipeRTSP::startClient() {
 
     m_isRunning = true;
 	m_player->Play(m_rtspAddress.c_str());
+	return true;
 }
 
 
