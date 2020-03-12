@@ -42,8 +42,8 @@ namespace RK {
     std::mutex RtspPlayer::_portMutex;
     std::vector<int> RtspPlayer::_known_used_Ports;
 
-    RtspPlayer::RtspPlayer(RecvBufferFn recv_cb, std::string name)
-    :   recv_cb(recv_cb)
+    RtspPlayer::RtspPlayer(RecvBufferFn recv_cb, std::string name, int rtp_port, int rtcp_port)
+    :   recv_cb(recv_cb), _rtp_port(rtp_port), _rtcp_port(rtcp_port)
     {
         TAG = "RTSP_" + name;
 
@@ -57,6 +57,7 @@ namespace RK {
 #endif
 
     }
+
 
     RtspPlayer::~RtspPlayer() {
 #ifdef _WIN32
@@ -270,11 +271,11 @@ namespace RK {
 
                 {
                     std::lock_guard<std::mutex> guard(_portMutex);
-                    _video_rtp_port = RTP_PORT;
+                    _video_rtp_port = _rtp_port;
                     while (!PortIsOpen(_video_rtp_port))
                         _video_rtp_port++;
 
-                    _video_rtcp_port = RTCP_PORT;
+                    _video_rtcp_port = _rtcp_port;
                     while (!PortIsOpen(_video_rtcp_port))
                         _video_rtcp_port++;
 

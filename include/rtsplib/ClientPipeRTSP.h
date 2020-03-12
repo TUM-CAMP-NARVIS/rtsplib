@@ -66,7 +66,7 @@ namespace rtsplib
 		ClientPipeRTSP(std::string rtspAddress);
 		~ClientPipeRTSP();
 
-		bool startClient();
+		bool startClient(int rtp_port = 12000, int rtcp_port = 13000);
         void stopClient();
 
 

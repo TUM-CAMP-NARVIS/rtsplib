@@ -45,9 +45,6 @@ extern "C" {
 #define RTP_OFFSET (12)
 #define FU_OFFSET (14)
 
-#define RTP_PORT 12000
-#define RTCP_PORT 13000
-
 namespace RK {
 
     using RecvBufferFn = std::function<void(uint8_t*, ssize_t)>;
@@ -105,7 +102,7 @@ namespace RK {
     class RtspPlayer {
     public:
         typedef std::shared_ptr<RtspPlayer> Ptr;
-        RtspPlayer(RecvBufferFn recv_cb = NULL, std::string name = "");
+        RtspPlayer(RecvBufferFn recv_cb = NULL, std::string name = "", int rtp_port = 12000, int rtcp_port = 13000);
         ~RtspPlayer();
         bool Play(std::string url);
         void Stop();
@@ -145,6 +142,10 @@ namespace RK {
         fd_set _readfd;
         fd_set _writefd;
         fd_set _errorfd;
+
+        // default ports
+        int _rtp_port = 12000;
+        int _rtcp_port = 13000;
 
         std::string _rtspurl;
         int _video_rtp_port;

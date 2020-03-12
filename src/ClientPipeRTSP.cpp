@@ -59,7 +59,7 @@ ClientPipeRTSP::~ClientPipeRTSP() {
     }
 }
 
-bool ClientPipeRTSP::startClient() {
+bool ClientPipeRTSP::startClient(int rtp_port, int rtcp_port) {
 	m_player = std::make_shared<RK::RtspPlayer>([&](uint8_t *buffer, ssize_t bufferLength)
 		{
 
@@ -117,7 +117,7 @@ bool ClientPipeRTSP::startClient() {
 			cvtBuffer(buffer, bufferLength, &m_frameBuffer[m_currentOffset], &rdLength);
 			m_currentOffset += static_cast<int>(rdLength);
 
-		}, "Stream");
+		}, "Stream", rtp_port, rtcp_port);
 
 	m_player->imgPropRdy_cb = [&](int width, int height, int bytesPerPixel)
 	{
