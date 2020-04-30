@@ -216,6 +216,10 @@ namespace RK {
                 sdp.append("\n");
             }
         }
+        if (sdp.empty()) {
+            log(TAG, "received empty sdp message");
+            return;
+        }
 
         _SdpParser = sdp_parse(sdp.c_str());
 
