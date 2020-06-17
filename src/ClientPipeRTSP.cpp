@@ -113,9 +113,15 @@ bool ClientPipeRTSP::startClient(int rtp_port, int rtcp_port) {
 			}
 			// Store subpackage into framebuffer
 			m_currentFrameCounter = frameCounter;
-			ssize_t rdLength;
-			cvtBuffer(buffer, bufferLength, &m_frameBuffer[m_currentOffset], &rdLength);
-			m_currentOffset += static_cast<int>(rdLength);
+			int rdLength = cvtBuffer(buffer, bufferLength, m_currentOffset);
+			if(rdLength < 0)
+			{
+				spdlog::warn("Failed reading NALU into framebuffer");
+				m_pkgCorrupted = true;
+			}else
+			{
+				m_currentOffset += rdLength;
+			}
 
 		}, "Stream", rtp_port, rtcp_port);
 
@@ -144,39 +150,52 @@ bool ClientPipeRTSP::startClient(int rtp_port, int rtcp_port) {
 }
 
 
-
-int ClientPipeRTSP::cvtBuffer(uint8_t *buf, ssize_t bufsize, uint8_t *outBuf, ssize_t *outLength)
+// Reads received buffer, interprets it, and stores it into the frame buffer
+int ClientPipeRTSP::cvtBuffer(uint8_t *buf, ssize_t bufsize, int currentFrameOffset)
 {
+	if(bufsize < RTP_OFFSET) return -1; //check if buf has valid length
+
+	int rdLength = 0;
 	uint8_t header[] = { 0, 0, 0, 1 };
 	struct RK::Nalu nalu = *(struct RK::Nalu *)(buf + RTP_OFFSET);
+
+	uint8_t* frameBuffer = &m_frameBuffer[currentFrameOffset];
+
 	if (nalu.type >= 0 && nalu.type < 24)
 	{ //one nalu
-		*outLength = bufsize - RTP_OFFSET;
-		memcpy(outBuf, buf + RTP_OFFSET, bufsize - RTP_OFFSET);
+		// remove RTP header bytes and store residual bytes into m_frameBuffer
+		rdLength = bufsize - RTP_OFFSET;
+		if(currentFrameOffset + rdLength >= m_width * m_height * m_bytesPerPixel) return -1;
+
+		memcpy(frameBuffer, buf + RTP_OFFSET, bufsize - RTP_OFFSET);
 	}
 	else if (nalu.type == 28)
-	{ //fu-a slice
+	{ // fu-a slice
+	  // the following payload is a fragment of one H264 I-Frame and need to be collected into the frame buffer before decoding
 		struct RK::FU fu;
 		uint8_t in = buf[RTP_OFFSET + 1];
-		fu.S = in >> 7;
-		fu.E = (in >> 6) & 0x01;
-		fu.R = (in >> 5) & 0x01;
-		fu.type = in & 0x1f;
+		fu.S = in >> 7; // Start bit
+		fu.E = (in >> 6) & 0x01; // End bit
+		fu.R = (in >> 5) & 0x01; // reserved bit
+		fu.type = in & 0x1f; //NAL type
 		if (fu.S == 1)
 		{
+			rdLength = 4 + 1 + bufsize - FU_OFFSET;
+			if(currentFrameOffset + rdLength >= m_width * m_height * m_bytesPerPixel) return -1;
+
 			uint8_t naluType = nalu.forbidden_zero_bit << 7 | nalu.nal_ref_idc << 5 | fu.type;
-			*outLength = 4 + 1 + bufsize - FU_OFFSET;
-			memcpy(outBuf, header, 4);
-			memcpy(&outBuf[4], &naluType, 1);
-			memcpy(&outBuf[5], buf + FU_OFFSET, bufsize - FU_OFFSET);
+			memcpy(frameBuffer, header, 4);
+			memcpy(&frameBuffer[4], &naluType, 1);
+			memcpy(&frameBuffer[5], buf + FU_OFFSET, bufsize - FU_OFFSET);
 		}
 		else
 		{
-			*outLength = bufsize - FU_OFFSET;
-			memcpy(outBuf, buf + FU_OFFSET, bufsize - FU_OFFSET);
+			rdLength = bufsize - FU_OFFSET;
+			if(currentFrameOffset + rdLength >= m_width * m_height * m_bytesPerPixel) return -1;
+			memcpy(frameBuffer, buf + FU_OFFSET, bufsize - FU_OFFSET);
 		}
 	}
-	return nalu.type;
+	return rdLength;
 }
 
 void ClientPipeRTSP::stopClient()
