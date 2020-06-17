@@ -182,6 +182,7 @@ int ClientPipeRTSP::cvtBuffer(uint8_t *buf, ssize_t bufsize)
 		{
 			rdLength = 4 + 1 + bufsize - FU_OFFSET;
 			if(m_currentFrameCounter + rdLength >= m_dataSize) return -1;
+			if(bufsize < FU_OFFSET) return -1;
 
 			uint8_t naluType = nalu.forbidden_zero_bit << 7 | nalu.nal_ref_idc << 5 | fu.type;
 			memcpy(frameBuffer, header, 4);
