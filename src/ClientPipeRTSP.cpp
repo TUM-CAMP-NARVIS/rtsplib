@@ -113,7 +113,7 @@ bool ClientPipeRTSP::startClient(int rtp_port, int rtcp_port) {
 			}
 			// Store subpackage into framebuffer
 			m_currentFrameCounter = frameCounter;
-			int rdLength = cvtBuffer(buffer, bufferLength, m_currentOffset);
+			int rdLength = cvtBuffer(buffer, bufferLength);
 			if(rdLength < 0)
 			{
 				spdlog::warn("Failed reading NALU into framebuffer");
@@ -151,7 +151,7 @@ bool ClientPipeRTSP::startClient(int rtp_port, int rtcp_port) {
 
 
 // Reads received buffer, interprets it, and stores it into the frame buffer
-int ClientPipeRTSP::cvtBuffer(uint8_t *buf, ssize_t bufsize, int currentFrameOffset)
+int ClientPipeRTSP::cvtBuffer(uint8_t *buf, ssize_t bufsize)
 {
 	if(bufsize < RTP_OFFSET) return -1; //check if buf has valid length
 
@@ -159,13 +159,13 @@ int ClientPipeRTSP::cvtBuffer(uint8_t *buf, ssize_t bufsize, int currentFrameOff
 	uint8_t header[] = { 0, 0, 0, 1 };
 	struct RK::Nalu nalu = *(struct RK::Nalu *)(buf + RTP_OFFSET);
 
-	uint8_t* frameBuffer = &m_frameBuffer[currentFrameOffset];
+	uint8_t* frameBuffer = &m_frameBuffer[m_currentFrameCounter];
 
 	if (nalu.type >= 0 && nalu.type < 24)
 	{ //one nalu
 		// remove RTP header bytes and store residual bytes into m_frameBuffer
 		rdLength = bufsize - RTP_OFFSET;
-		if(currentFrameOffset + rdLength >= m_width * m_height * m_bytesPerPixel) return -1;
+		if(m_currentFrameCounter + rdLength >= m_dataSize) return -1;
 
 		memcpy(frameBuffer, buf + RTP_OFFSET, bufsize - RTP_OFFSET);
 	}
@@ -181,7 +181,7 @@ int ClientPipeRTSP::cvtBuffer(uint8_t *buf, ssize_t bufsize, int currentFrameOff
 		if (fu.S == 1)
 		{
 			rdLength = 4 + 1 + bufsize - FU_OFFSET;
-			if(currentFrameOffset + rdLength >= m_width * m_height * m_bytesPerPixel) return -1;
+			if(m_currentFrameCounter + rdLength >= m_dataSize) return -1;
 
 			uint8_t naluType = nalu.forbidden_zero_bit << 7 | nalu.nal_ref_idc << 5 | fu.type;
 			memcpy(frameBuffer, header, 4);
@@ -191,7 +191,7 @@ int ClientPipeRTSP::cvtBuffer(uint8_t *buf, ssize_t bufsize, int currentFrameOff
 		else
 		{
 			rdLength = bufsize - FU_OFFSET;
-			if(currentFrameOffset + rdLength >= m_width * m_height * m_bytesPerPixel) return -1;
+			if(m_currentFrameCounter + rdLength >= m_dataSize) return -1;
 			memcpy(frameBuffer, buf + FU_OFFSET, bufsize - FU_OFFSET);
 		}
 	}

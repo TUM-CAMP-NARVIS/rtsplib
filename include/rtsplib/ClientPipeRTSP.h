@@ -99,7 +99,7 @@ namespace rtsplib
 
 	private:
 
-		int cvtBuffer(uint8_t *buf, ssize_t bufsize, uint8_t *outBuf, ssize_t *outLength);
+		int cvtBuffer(uint8_t *buf, ssize_t bufsize);
 
         RecvCallFn m_recv_cb{nullptr};
         StartStreammCallFn m_start_stream_cb{nullptr};
@@ -108,7 +108,7 @@ namespace rtsplib
         int m_height{0};
         int m_width{0};
         int m_bytesPerPixel{0};
-        int m_dataSize;
+        int m_dataSize{0};
         uint8_t* m_frameBuffer{nullptr};
 
         bool m_isRunning = false;
