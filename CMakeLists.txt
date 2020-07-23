@@ -51,9 +51,6 @@ include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup(TARGETS)
 
 include(GNUInstallDirs)
-
-OPTION(ENABLE_JUMBOFRAMES "Enable JumboFrames (9000) for efficient streaming of rtsp" ON)
-
 #################################################################################################
 # RTSP Server and Client
 #################################################################################################
@@ -157,10 +154,6 @@ add_library(rtsplib ${RTSP_CLIENT_SRCS} ${RTSP_SERVER_SRCS} ${RTSP_COMMON_HDRS} 
 set_property(TARGET rtsplib PROPERTY CXX_STANDARD 11)
 set_target_properties(rtsplib PROPERTIES LINKER_LANGUAGE CXX)
 set_property(TARGET rtsplib PROPERTY POSITION_INDEPENDENT_CODE ON)
-
-if(ENABLE_JUMBOFRAMES)
-  target_compile_definitions(rtsplib PUBLIC RTSPLIB_ENABLE_JUMBOFRAMES)
-endif()
 
 target_link_libraries(rtsplib PRIVATE
         CONAN_PKG::spdlog
