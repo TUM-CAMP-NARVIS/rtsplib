@@ -5,9 +5,13 @@ class rtsplib_Conan(ConanFile):
     version = "0.1"
     generators = "cmake"
     settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [True, False]}
+    options = {
+            "shared": [True, False],
+            "enable_jumboframes": [True, False],
+    }
     default_options = {
-        "shared": True, 
+        "shared": True,
+        "enable_jumboframes": True,
         }
     exports_sources = "examples/*", "include/*", "src/*", "tests/*", "CMakeLists.txt"
 
@@ -21,6 +25,7 @@ class rtsplib_Conan(ConanFile):
     def build(self):
         cmake = CMake(self)
         cmake.definitions["BUILD_SHARED_LIBS"] = self.options.shared
+        cmake.definitions["ENABLE_JUMBOFRAMES"] = self.options.enable_jumboframes
         cmake.configure()
         cmake.build()
 
