@@ -7,16 +7,7 @@
 #include <memory>
 #include <cstdint>
 
-#ifndef RTP_HEADER_SIZE
-#define RTP_HEADER_SIZE   	   12
-#endif
-
-#ifndef MAX_RTP_PAYLOAD_SIZE
-#define MAX_RTP_PAYLOAD_SIZE   	   1420
-#endif
-
-#define RTP_VERSION			   2
-#define RTP_TCP_HEAD_SIZE	   4
+#include "rtsplib/rtsplib_network.h"
 
 namespace xop
 {

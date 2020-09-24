@@ -54,7 +54,7 @@
 #include <unistd.h>
 #endif
 
-#include "rtsplib_config.h"
+#include "rtsplib/rtsplib_config.h"
 
 #pragma warning( disable : 4251 ) // needs to have dll-interface to be used by clients of class
 
@@ -65,11 +65,7 @@
 typedef SSIZE_T ssize_t;
 #endif
 
-#define RTP_HEADER_SIZE   	   12
-
-#ifndef MAX_RTP_PAYLOAD_SIZE
-  #cmakedefine MAX_RTP_PAYLOAD_SIZE @MAX_RTP_PAYLOAD_SIZE@
-#endif 
+#include "rtsplib/rtsplib_network.h"
 
 namespace rtsplib
 {

@@ -59,7 +59,7 @@ ENDIF()
 
 MESSAGE(STATUS "Max RTP Payload Size is set to: ${MAX_RTP_PAYLOAD_SIZE}")
 
-configure_file(${PROJECT_SOURCE_DIR}/include/rtsplib/rtsplib_common.h.in ${CMAKE_BINARY_DIR}/include/rtsplib/rtsplib_common.h @ONLY)
+configure_file(${PROJECT_SOURCE_DIR}/include/rtsplib/rtsplib_network.h.in ${CMAKE_BINARY_DIR}/include/rtsplib/rtsplib_network.h @ONLY)
 
 #################################################################################################
 # RTSP Server and Client
@@ -69,7 +69,8 @@ find_package(Threads REQUIRED)
 
 
 set(RTSP_COMMON_HDRS
-        ${CMAKE_BINARY_DIR}/include/rtsplib/rtsplib_common.h
+        ${PROJECT_SOURCE_DIR}/include/rtsplib/rtsplib_common.h
+        ${CMAKE_BINARY_DIR}/include/rtsplib/rtsplib_network.h
         ${PROJECT_SOURCE_DIR}/include/rtsplib/rtsplib_config.h
         )
 
@@ -188,6 +189,7 @@ endif()
 
 install(TARGETS rtsplib DESTINATION ${CMAKE_INSTALL_LIBDIR})
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-install(FILES ${PROJECT_BINARY_DIR}/include/rtsplib/rtsplib_config.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/rtsplib)
+install(FILES ${PROJECT_BINARY_DIR}/include/rtsplib/rtsplib_network.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/rtsplib)
+
 add_subdirectory(examples)
 add_subdirectory(tests)
