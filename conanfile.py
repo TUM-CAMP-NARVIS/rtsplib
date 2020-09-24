@@ -2,16 +2,16 @@ from conans import ConanFile, tools, CMake
 
 class rtsplib_Conan(ConanFile):
     name = "rtsplib"
-    version = "0.1.2"
+    version = "0.1.3"
     generators = "cmake"
     settings = "os", "compiler", "build_type", "arch"
     options = {
             "shared": [True, False],
-            "enable_jumboframes": [True, False],
+            "max_rtp_payload_size": "ANY",
     }
     default_options = {
         "shared": True,
-        "enable_jumboframes": True,
+        "max_rtp_payload_size": 1420,
         }
     exports_sources = "examples/*", "include/*", "src/*", "tests/*", "CMakeLists.txt"
 
@@ -24,8 +24,9 @@ class rtsplib_Conan(ConanFile):
 
     def build(self):
         cmake = CMake(self)
+        cmake.verbose = True
         cmake.definitions["BUILD_SHARED_LIBS"] = self.options.shared
-        cmake.definitions["ENABLE_JUMBOFRAMES"] = self.options.enable_jumboframes
+        cmake.definitions["MAX_RTP_PAYLOAD_SIZE"] = self.options.max_rtp_payload_size
         cmake.configure()
         cmake.build()
 

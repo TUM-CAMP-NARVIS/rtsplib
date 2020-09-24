@@ -68,10 +68,8 @@ typedef SSIZE_T ssize_t;
 
 #define RTP_HEADER_SIZE   	   12
 
-#ifdef RTSPLIB_ENABLE_JUMBOFRAMES
-  #define MAX_RTP_PAYLOAD_SIZE   8900
-#else
-  #define MAX_RTP_PAYLOAD_SIZE   1420
+#ifndef MAX_RTP_PAYLOAD_SIZE
+  #cmakedefine MAX_RTP_PAYLOAD_SIZE
 #endif 
 
 namespace rtsplib

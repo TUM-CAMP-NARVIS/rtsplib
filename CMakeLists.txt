@@ -52,7 +52,14 @@ conan_basic_setup(TARGETS)
 
 include(GNUInstallDirs)
 
-OPTION(ENABLE_JUMBOFRAMES "Enable JumboFrames (9000) for efficient streaming of rtsp" ON)
+
+IF(NOT DEFINED MAX_RTP_PAYLOAD_SIZE)
+    set(MAX_RTP_PAYLOAD_SIZE 1420)
+ENDIF()
+
+MESSAGE(STATUS "Max RTP Payload Size is set to: ${MAX_RTP_PAYLOAD_SIZE}")
+
+configure_file(${PROJECT_SOURCE_DIR}/include/rtsplib/rtsplib_common.h.in ${CMAKE_BINARY_DIR}/include/rtsplib/rtsplib_common.h)
 
 #################################################################################################
 # RTSP Server and Client
@@ -62,7 +69,7 @@ find_package(Threads REQUIRED)
 
 
 set(RTSP_COMMON_HDRS
-        ${PROJECT_SOURCE_DIR}/include/rtsplib/rtsplib_common.h
+        ${CMAKE_BINARY_DIR}/include/rtsplib/rtsplib_common.h
         ${PROJECT_SOURCE_DIR}/include/rtsplib/rtsplib_config.h
         )
 
@@ -159,7 +166,7 @@ set_target_properties(rtsplib PROPERTIES LINKER_LANGUAGE CXX)
 set_property(TARGET rtsplib PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 if(ENABLE_JUMBOFRAMES)
-  target_compile_definitions(rtsplib PUBLIC RTSPLIB_ENABLE_JUMBOFRAMES)
+  target_compile_definitions(rtsplib PUBLIC MAX_RTP_PAYLOAD_SIZE=${MAX_RTP_PAYLOAD_SIZE})
 endif()
 
 target_link_libraries(rtsplib PRIVATE
@@ -172,6 +179,7 @@ target_include_directories(rtsplib PUBLIC
         $<INSTALL_INTERFACE:include>
         PRIVATE
         ${PROJECT_BINARY_DIR}/src
+        ${CMAKE_BINARY_DIR}/include
         )
 
 if(BUILD_SHARED_LIBS)
@@ -180,6 +188,6 @@ endif()
 
 install(TARGETS rtsplib DESTINATION ${CMAKE_INSTALL_LIBDIR})
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-
+install(FILES ${PROJECT_BINARY_DIR}/include/rtsplib/rtsplib_config.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/rtsplib)
 add_subdirectory(examples)
 add_subdirectory(tests)
