@@ -59,7 +59,7 @@ ENDIF()
 
 MESSAGE(STATUS "Max RTP Payload Size is set to: ${MAX_RTP_PAYLOAD_SIZE}")
 
-configure_file(${PROJECT_SOURCE_DIR}/include/rtsplib/rtsplib_common.h.in ${CMAKE_BINARY_DIR}/include/rtsplib/rtsplib_common.h)
+configure_file(${PROJECT_SOURCE_DIR}/include/rtsplib/rtsplib_common.h.in ${CMAKE_BINARY_DIR}/include/rtsplib/rtsplib_common.h @ONLY)
 
 #################################################################################################
 # RTSP Server and Client
