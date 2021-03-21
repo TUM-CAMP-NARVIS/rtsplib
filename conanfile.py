@@ -2,7 +2,7 @@ from conans import ConanFile, tools, CMake
 
 class rtsplib_Conan(ConanFile):
     name = "rtsplib"
-    version = "0.1.3"
+    version = "0.1.4"
     generators = "cmake"
     settings = "os", "compiler", "build_type", "arch"
     options = {
@@ -11,14 +11,14 @@ class rtsplib_Conan(ConanFile):
     }
     default_options = {
         "shared": True,
-        "max_rtp_payload_size": 1420,
+        "max_rtp_payload_size": 1024,
         }
     exports_sources = "examples/*", "include/*", "src/*", "tests/*", "CMakeLists.txt"
 
     description = "rtsp streaming library"
 
     requires = (
-        "spdlog/1.4.2",
+        "spdlog/1.8.2",
         "gtest/1.10.0",
     )
 
