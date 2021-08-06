@@ -2,7 +2,7 @@ from conans import ConanFile, tools, CMake
 
 class rtsplib_Conan(ConanFile):
     name = "rtsplib"
-    version = "0.1.4"
+    version = "0.1.5"
     generators = "cmake"
     settings = "os", "compiler", "build_type", "arch"
     options = {
