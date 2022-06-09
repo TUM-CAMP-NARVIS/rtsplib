@@ -37,6 +37,7 @@ typedef SSIZE_T ssize_t;
 #include <functional>
 #include <sys/types.h>
 #include <mutex>
+#include <memory>
 
 extern "C" {
 #include "rtsplib/client/sdp.h"
